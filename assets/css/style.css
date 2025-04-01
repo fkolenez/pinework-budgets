@@ -15,6 +15,3 @@ body {
     cursor: pointer; /* Muda o cursor para um ponteiro */
     text-decoration: none; /* Remove a decoração de texto (sublinhado) */
 }
-.span-important{
-    border-radius: 0 0.25rem 0.25rem 0;
-}

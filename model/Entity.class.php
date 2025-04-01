@@ -10,7 +10,6 @@
             return $statement->fetchAll();
         }
 
-        
         public function listFiltered($table, $clientName){
             $pdo = parent::getInstance();
             $sql = "SELECT * FROM $table WHERE LOWER(client) LIKE LOWER(:client)";
@@ -19,8 +18,7 @@
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
-        
-
+    
         // função para inserir
         public function insert($table, $data){
             $pdo = parent::getInstance();

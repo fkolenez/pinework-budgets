@@ -14,16 +14,30 @@ if (!empty($clientName)) {
     $dados = $entity->list("budgets");
 }
 
+# TODO
+# Fazer um modal para exclusão
+
 ?>
+
+<style>
+    
+.shadow_main{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+</style>
+
 <div class="container pt-5">
     <h1>Olá, Gabriel</h1>
 
-    <div class="form-group pt-3">
+    <hr>
+
+    <div class="form-group mb-4">
         <div class="row d-flex justify-content-between align-items-center">
             <div class="col-md-4 d-flex pr-0 pl-0">
                 <form method="GET" class="d-flex align-items-center w-100">
-                    <div class="input-group mt-2 shadow">
-                        <input type="text" class="form-control" placeholder="Digite o nome do cliente" name="client"
+                    <div class="input-group mt-2 shadow_main">
+                        <input type="text" class="form-control " placeholder="Digite o nome do cliente" name="client"
                             value="<?= htmlspecialchars($clientName) ?>">
 
                         <button type="submit" class="p-0 clean-button">
@@ -43,18 +57,18 @@ if (!empty($clientName)) {
                 </form>
             </div>
 
-            <button class="btn btn-sm btn-secondary mt-2">
+            <button class="btn btn-sm btn-secondary shadow_main mt-2">
                 Adicionar orçamento
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg align-middle"
-                    viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-plus-lg align-middle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
                 </svg>
             </button>
 
             <a href="<?= strtok($_SERVER["REQUEST_URI"], token: '?') ?>">
-                <button class="btn btn-sm mt-2">
+                <button class="btn btn-sm mt-2 shadow_main">
                     Reiniciar tabela
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-arrow-counterclockwise align-middle" viewBox="0 0 16 16">
@@ -68,8 +82,10 @@ if (!empty($clientName)) {
         </div>
     </div>
 
+    <hr>
+
     <div class="row d-flex justify-content-center pt-3">
-        <table class="table table-striped shadow">
+        <table class="table table-striped shadow_main">
             <thead>
                 <tr>
                     <th class="text-center">ID</th>
@@ -85,11 +101,21 @@ if (!empty($clientName)) {
                     <?php foreach ($dados as $key): ?>
                         <tr class=" text-dark">
                             <td class="text-center"> <?= $key["id"] ?> </td>
-                            <td class="text-center"> <?= $key["client"] ?> </td>
-                            <td class="text-center"> R$: <?= $key["budgets"] ?> </td>
-                            <td class="text-center"> <?= $key["costs"] ?> </td>
+                            <td class="text-center">
+                                <a href="client.php?id=<?= $key['id'] ?>"
+                                    class="d-block w-100 h-100 text-dark text-decoration-none p-2">
+                                    <?= htmlspecialchars($key["client"]) ?>
+                                </a>
+                            </td>
+                            <td class="text-center"> R$: <?= number_format($key['budgets'], 2, ',', '.') ?> </td>
+                            <td class="text-center"> R$: <?= number_format($key['budgets'], 2, ',', '.') ?> </td>
                             <td class="text-center"> <?= $key["payed"] ?> </td>
                             <td class="d-flex justify-content-around">
+
+                                <!--
+                                   Chamar as funçoes de delete e update 
+                                -->
+
                                 <a href="edit.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm">
                                     Editar
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -100,7 +126,7 @@ if (!empty($clientName)) {
                                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                     </svg>
                                 </a>
-                                <a href="delete.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm"
+                                <a href="delete.php?id=<?= $key['id'] ?>" class="btn btn-outline-secondary btn-sm"
                                     onclick="return confirm('Tem certeza que deseja excluir este registro?');">
                                     Excluir
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -114,13 +140,14 @@ if (!empty($clientName)) {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="3">Nenhum dado encontrado.</td>
+                        <td colspan="6">Nenhum dado encontrado.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
+
 <?php
 include_once("footer.php");
 ?>
