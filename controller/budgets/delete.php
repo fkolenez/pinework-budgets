@@ -8,12 +8,11 @@
 
     if(isset($id) && !empty($id)){
         try {
-            $Entity->delete("emprego", $id);
+            $Entity->delete("budgets", $id);
             $_SESSION["msg"] = "Deletado com sucesso";
         } catch (Exception $e) {
             $_SESSION["msg_error"] = "$e";
         }
-
         header('Location: ../../view/emprego/listagem.php');
     }
 ?>
