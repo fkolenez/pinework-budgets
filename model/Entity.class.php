@@ -28,13 +28,13 @@
 
             $sql = "INSERT INTO $table($campos) VALUES ($valores)";
 
-            echo $sql;
-
             $statement = $pdo->prepare($sql);
 
             foreach($data as $key => $value) {
                 $statement->bindValue(":$key", $value,PDO::PARAM_STR);
             }
+
+            echo "execute";
 
             $statement->execute();
         }

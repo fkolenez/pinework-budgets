@@ -16,15 +16,24 @@ if (!empty($clientName)) {
 
 # TODO
 # Fazer um modal para exclusão
+# Chamar as funçoes de delete e update na tabela
 
 ?>
 
 <style>
-    
-.shadow_main{
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-}
+    .shadow_main {
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    }
 
+    .border-radius-lupa {
+        border-radius: 0 .25rem .25rem 0 !important;
+    }
+
+    .form-control:focus {
+        border-color: black;
+        box-shadow: none;
+        outline: 0;
+    }
 </style>
 
 <div class="container pt-5">
@@ -43,7 +52,7 @@ if (!empty($clientName)) {
                         <button type="submit" class="p-0 clean-button">
                             <div class="input-group-prepend">
                                 <span
-                                    class="input-group-text w-100 d-flex justify-content-center align-items-center span-important"
+                                    class="input-group-text border-radius-lupa w-100 d-flex justify-content-center align-items-center span-important"
                                     id="basic-addon1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                         class="bi bi-search" viewBox="0 0 16 16">
@@ -57,7 +66,8 @@ if (!empty($clientName)) {
                 </form>
             </div>
 
-            <button class="btn btn-sm btn-secondary shadow_main mt-2">
+            <button class="btn btn-sm btn-secondary shadow_main mt-2" data-bs-toggle="modal"
+                data-bs-target="#novoOrcamentoModal">
                 Adicionar orçamento
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -107,16 +117,11 @@ if (!empty($clientName)) {
                                     <?= htmlspecialchars($key["client"]) ?>
                                 </a>
                             </td>
-                            <td class="text-center"> R$: <?= number_format($key['budgets'], 2, ',', '.') ?> </td>
-                            <td class="text-center"> R$: <?= number_format($key['budgets'], 2, ',', '.') ?> </td>
-                            <td class="text-center"> <?= $key["payed"] ?> </td>
+                            <td class="text-center"> R$: <?= number_format($key['budget'], 2, ',', '.') ?> </td>
+                            <td class="text-center"> R$: <?= number_format($key['budget'], 2, ',', '.') ?> </td>
+                            <td class="text-center"> <?= $key["payed"] === "s" ? "Sim" : "Não" ?> </td>
                             <td class="d-flex justify-content-around">
-
-                                <!--
-                                   Chamar as funçoes de delete e update 
-                                -->
-
-                                <a href="edit.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm">
+                                <a href="insert.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm">
                                     Editar
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-pencil-square align-middle" viewBox="0 0 16 16">
@@ -126,6 +131,7 @@ if (!empty($clientName)) {
                                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                     </svg>
                                 </a>
+
                                 <a href="delete.php?id=<?= $key['id'] ?>" class="btn btn-outline-secondary btn-sm"
                                     onclick="return confirm('Tem certeza que deseja excluir este registro?');">
                                     Excluir
@@ -146,7 +152,65 @@ if (!empty($clientName)) {
             </tbody>
         </table>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="novoOrcamentoModal" tabindex="-1" aria-labelledby="novoOrcamentoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="novoOrcamentoLabel">Novo Orçamento</h5>
+                    <button type="button" class="btn-close clean-button" data-bs-dismiss="modal" aria-label="Fechar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-lg align-middle" viewBox="0 0 16 16">
+                            <path
+                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../controller/insert.php" method="post">
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label for="cliente" class="form-label fs-6">Cliente</label>
+                            <input type="text" class="form-control" id="client" name="client" placeholder="Digite o nome do cliente">
+                        </div>
+
+                        <!-- Orçamento -->
+                        <div class="mb-3">
+                            <label for="orcamento" class="form-label fs-6">Orçamento</label>
+                            <input type="number" class="form-control" id="budget" name="budget" placeholder="R$: 1000">
+                        </div>
+
+                        <!-- Custos -->
+                        <div class="mb-3">
+
+                        <!-- Envia näo para caso nao estiver marcado, e sim para se estiver -->
+                            <input type="hidden" name="payed" value="n">
+                            <label for="custos" class="form-label fs-6">Custos</label>
+                            <input type="number" class="form-control" id="costs" name="costs" placeholder="R$: 200"  value="s">
+                        </div>
+
+                        <!-- Pago -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="payed" name="payed">
+                            <label class="form-check-label fs-6" for="pago">Pago</label>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-sm btn-secondary">Salvar</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <?php
 include_once("footer.php");
