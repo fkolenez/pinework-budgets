@@ -117,8 +117,8 @@ if (!empty($clientName)) {
                                     <?= htmlspecialchars($key["client"]) ?>
                                 </a>
                             </td>
-                            <td class="text-center"> R$: <?= number_format($key['budget'], 2, ',', '.') ?> </td>
-                            <td class="text-center"> R$: <?= number_format($key['budget'], 2, ',', '.') ?> </td>
+                            <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
+                            <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
                             <td class="text-center"> <?= $key["payed"] === "s" ? "Sim" : "Não" ?> </td>
                             <td class="d-flex justify-content-around">
                                 <a href="insert.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm">
@@ -132,15 +132,16 @@ if (!empty($clientName)) {
                                     </svg>
                                 </a>
 
-                                <a href="delete.php?id=<?= $key['id'] ?>" class="btn btn-outline-secondary btn-sm"
-                                    onclick="return confirm('Tem certeza que deseja excluir este registro?');">
+                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal" onclick="setDeleteId(<?= $key['id'] ?>)">
                                     Excluir
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-x-lg align-middle" viewBox="0 0 16 16">
                                         <path
                                             d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                                     </svg>
-                                </a>
+                                </button>
+
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -173,22 +174,24 @@ if (!empty($clientName)) {
                         <!-- Nome -->
                         <div class="mb-3">
                             <label for="cliente" class="form-label fs-6">Cliente</label>
-                            <input type="text" class="form-control" id="client" name="client" placeholder="Digite o nome do cliente">
+                            <input type="text" class="form-control" id="client" name="client"
+                                placeholder="Digite o nome do cliente">
                         </div>
 
                         <!-- Orçamento -->
                         <div class="mb-3">
                             <label for="orcamento" class="form-label fs-6">Orçamento</label>
-                            <input type="number" class="form-control" id="budget" name="budget" placeholder="R$: 1000">
+                            <input type="number" class="form-control" id="budget" name="budget" placeholder="R$ 0,00">
                         </div>
 
                         <!-- Custos -->
                         <div class="mb-3">
 
-                        <!-- Envia näo para caso nao estiver marcado, e sim para se estiver -->
+                            <!-- Envia näo para caso nao estiver marcado, e sim para se estiver -->
                             <input type="hidden" name="payed" value="n">
                             <label for="custos" class="form-label fs-6">Custos</label>
-                            <input type="number" class="form-control" id="costs" name="costs" placeholder="R$: 200"  value="s">
+                            <input type="number" class="form-control" id="costs" name="costs" placeholder="R$ 0,00"
+                                value="s">
                         </div>
 
                         <!-- Pago -->
@@ -203,6 +206,38 @@ if (!empty($clientName)) {
                         </div>
                     </form>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal exclusão -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"> <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-lg align-middle" viewBox="0 0 16 16">
+                            <path
+                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir este orçamento?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteBtn">Excluir <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-lg align-middle" viewBox="0 0 16 16">
+                            <path
+                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
