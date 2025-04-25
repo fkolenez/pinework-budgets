@@ -6,7 +6,7 @@
             if(!isset(self::$instance)){
                 // A instancia recebe essa configurações para o banco
                 self::$instance = 
-                new PDO("mysql:host=localhost:3306;dbname=budgets","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+                new PDO("mysql:host=localhost:3306;dbname=pinework_db","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
                 // -> acessa classes
 
                 // excessão pra erro
