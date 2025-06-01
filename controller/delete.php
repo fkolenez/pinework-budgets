@@ -14,7 +14,7 @@
             $_SESSION["msg_error"] = "$e";
         }
 
-        header('Location: ../view/inicio.php');
+        header('Location: ../view/home.php');
         exit(); // Garante que o redirecionamento funciona
     }
 ?>

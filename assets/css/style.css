@@ -7,11 +7,40 @@ body {
     background-color: #ebebeb;
 }
 
-.clean-button{
-    border: 0; /* Remove a borda */
-    background: none; /* Remove o fundo */
-    padding: 0; /* Remove o espaçamento interno */
-    outline: none; /* Remove a borda de foco */
-    cursor: pointer; /* Muda o cursor para um ponteiro */
-    text-decoration: none; /* Remove a decoração de texto (sublinhado) */
+.clean-button {
+    border: 0;
+    /* Remove a borda */
+    background: none;
+    /* Remove o fundo */
+    padding: 0;
+    /* Remove o espaçamento interno */
+    outline: none;
+    /* Remove a borda de foco */
+    cursor: pointer;
+    /* Muda o cursor para um ponteiro */
+    text-decoration: none;
+    /* Remove a decoração de texto (sublinhado) */
 }
+
+.styledDiv {
+    background-color: white;
+    height: 300px;
+    width: 100%;
+}
+
+.box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #0d6efd;
+    border-radius: 4px;
+}
+
+.box.filled {
+    background-color: #0d6efd;
+}
+
+.progress-boxes {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 32px;
+    }

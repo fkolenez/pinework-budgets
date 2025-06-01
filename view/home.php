@@ -1,22 +1,25 @@
 <?php
 include_once("header.php");
-require_once '../model/Entity.class.php'; // Certifique-se de que está incluindo a classe corretamente
+require_once '../model/Entity.class.php';
 
-$entity = new Entity(); // Instancia a classe
-$dados = $entity->list("budgets"); // Obtém os dados do banco de dados]
+$entity = new Entity();
 
 $clientName = isset($_GET['client']) ? trim($_GET['client']) : '';
+$statusFilter = isset($_GET['status']) ? trim($_GET['status']) : '';
 
-// Se um nome foi digitado, filtra no banco de dados
+// Monta condição de filtro dinâmica
+$conditions = [];
+
 if (!empty($clientName)) {
-    $dados = $entity->listFiltered("budgets", $clientName);
-} else {
-    $dados = $entity->list("budgets");
+    $conditions[] = "LOWER(client) LIKE LOWER('%" . $clientName . "%')";
+}
+if (!empty($statusFilter) && $statusFilter !== 'all') {
+    $conditions[] = "status = '$statusFilter'";
 }
 
-# TODO
-# Fazer um modal para exclusão
-# Chamar as funçoes de delete e update na tabela
+$whereClause = count($conditions) > 0 ? implode(" AND ", $conditions) : '1';
+
+$dados = $entity->listByCondition("budgets", $whereClause);
 
 ?>
 
@@ -76,18 +79,27 @@ if (!empty($clientName)) {
                 <div class="col-md-4 d-flex pr-0 pl-0">
                     <form method="GET" class="d-flex align-items-center w-100">
                         <div class="input-group mt-2 shadow_main">
-                            <input type="text" class="form-control " placeholder="Digite o nome do cliente" name="client"
+                            <input type="text" class="form-control" placeholder="Digite o nome do cliente" name="client"
                                 value="<?= htmlspecialchars($clientName) ?>">
+
+                            <select name="status" class="form-select" style="max-width: 160px;">
+                                <option value="all" <?= $statusFilter === 'all' ? 'selected' : '' ?>>Todos</option>
+                                <option value="draft" <?= $statusFilter === 'draft' ? 'selected' : '' ?>>Rascunho</option>
+                                <option value="not_paid" <?= $statusFilter === 'not_paid' ? 'selected' : '' ?>>Não pago
+                                </option>
+                                <option value="completed" <?= $statusFilter === 'completed' ? 'selected' : '' ?>>Concluído
+                                </option>
+                                <option value="not_done" <?= $statusFilter === 'not_done' ? 'selected' : '' ?>>Cancelado
+                                </option>
+                            </select>
 
                             <button type="submit" class="p-0 clean-button">
                                 <div class="input-group-prepend">
                                     <span
-                                        class="input-group-text border-radius-lupa w-100 d-flex justify-content-center align-items-center span-important"
-                                        id="basic-addon1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                            class="bi bi-search" viewBox="0 0 16 16">
-                                            <path
-                                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                        class="input-group-text border-radius-lupa w-100 d-flex justify-content-center align-items-center span-important">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398..." />
                                         </svg>
                                     </span>
                                 </div>
@@ -101,7 +113,8 @@ if (!empty($clientName)) {
                         Reiniciar tabela
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-arrow-counterclockwise align-middle" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
+                            <path fill-rule="evenodd"
+                                d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
                             <path
                                 d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
                         </svg>
@@ -138,7 +151,18 @@ if (!empty($clientName)) {
                                 </td>
                                 <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
                                 <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
-                                <td class="text-center"> <?= $key["payed"] === "s" ? "Sim" : "Não" ?> </td>
+                                <?php
+                                $status = $key["status"];
+                                $payedText = ($status === 'completed') ? 'Sim' : 'Não';
+                                $payedClass = match ($status) {
+                                    'completed' => 'bg-success text-white',
+                                    'not_paid' => 'bg-danger text-white',
+                                    'not_done' => 'bg-warning',
+                                    'draft' => 'bg-secondary text-white',
+                                    default => ''
+                                };
+                                ?>
+                                <td class="text-center <?= $payedClass ?>"><?= $payedText ?></td>
                                 <td class="d-flex justify-content-around">
                                     <a href="insert.php?id=<?= $key['id'] ?>" class="btn  btn-outline-secondary  btn-sm">
                                         Editar
@@ -212,6 +236,7 @@ if (!empty($clientName)) {
             <li>Acertar oque foi pedido para Adicionar orçamento</li>
             <li>Select dinamico pra add orçamento</li>
             <li>Graficos</li>
+            <li>alert para excluir a pelicula adicionada</li>
         </ul>
     </div>
 
