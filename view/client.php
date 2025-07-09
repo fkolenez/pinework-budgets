@@ -1,19 +1,19 @@
 <?php
-include_once("header.php");
-require_once '../model/Entity.class.php';
-$entity = new Entity();
+    include_once("header.php");
+    require_once '../model/Entity.class.php';
+    $entity = new Entity();
 
-$budget_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($budget_id <= 0) {
-    die("ID inválido");
-}
+    $budget_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    if ($budget_id <= 0) {
+        die("ID inválido");
+    }
 
-$budget = $entity->getInfoByID("budgets", $budget_id);
-$films = $entity->listByCondition("films", "budget_id = $budget_id");
-$costs = $entity->listByCondition("additional_costs", "budget_id = $budget_id");
+    $budget = $entity->getInfoByID("budgets", $budget_id);
+    $films = $entity->listByCondition("films", "budget_id = $budget_id");
+    $costs = $entity->listByCondition("additional_costs", "budget_id = $budget_id");
 
-$total_films = array_sum(array_column($films, 'cost'));
-$total_costs = array_sum(array_column($costs, 'travel_cost'));
+    $total_films = array_sum(array_column($films, 'cost'));
+    $total_costs = array_sum(array_column($costs, 'travel_cost'));
 ?>
 
 <div class="d-flex">

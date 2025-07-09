@@ -3,6 +3,13 @@ require_once("Conexao.class.php");
 
 class Entity extends Conexao
 {
+    private $pdo;
+
+    public function __construct()
+    {
+        $this->pdo = Conexao::getInstance();
+    }
+
     public function list($table)
     {
         $pdo = parent::getInstance();
@@ -55,6 +62,16 @@ class Entity extends Conexao
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    public function findOneByCondition($table, $condition)
+    {
+        $sql = "SELECT * FROM $table WHERE $condition LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result ?: null;
     }
 
     public function getInfoByID($table, $id)

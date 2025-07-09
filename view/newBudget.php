@@ -52,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 <div class="container full-center">
-            <h2 class="mb-4 text-center">Novo Orçamento</h2>
-
+    <h2 class="mb-4 text-center">Novo Orçamento</h2>
 
     <div class="bg-white p-5 rounded shadow" style="max-width: 600px; width: 100%;">
 

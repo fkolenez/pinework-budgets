@@ -127,13 +127,14 @@ $dados = $entity->listByCondition("budgets", $whereClause);
         <hr>
 
         <div class="row d-flex justify-content-center pt-3">
-            <table class="table table-striped shadow_main">
+    
+        <table class="table table-striped shadow_main">
                 <thead>
                     <tr>
                         <th class="text-center">ID</th>
                         <th class="text-center">Cliente</th>
                         <th class="text-center">Orçamento total</th>
-                        <th class="text-center">Custos</th>
+                        <th class="text-center">Data</th>
                         <th class="text-center">Pago</th>
                         <th class="text-center">Ações</th>
                     </tr>
@@ -150,7 +151,8 @@ $dados = $entity->listByCondition("budgets", $whereClause);
                                     </a>
                                 </td>
                                 <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
-                                <td class="text-center"> R$ <?= number_format($key['budget'], 2, ',', '.') ?> </td>
+                                <td class="text-center"> <?= htmlspecialchars($key["data"]) ?> </td>                               
+
                                 <?php
                                 $status = $key["status"];
                                 $payedText = ($status === 'completed') ? 'Sim' : 'Não';
@@ -229,8 +231,8 @@ $dados = $entity->listByCondition("budgets", $whereClause);
             </div>
         </div>
         <ul>
-            <li>Pagina de cada cliente</li>
             <li>Data na tabela</li>
+            <li>total budget =  (Cost * quantity)+additional_costs</li>
             <li>Filtro por data</li>
             <li>Controle de estoque</li>
             <li>Acertar oque foi pedido para Adicionar orçamento</li>
@@ -242,6 +244,6 @@ $dados = $entity->listByCondition("budgets", $whereClause);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <?php
+<?php
     include_once("footer.php");
-    ?>
+?>
